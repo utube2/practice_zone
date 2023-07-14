@@ -2,11 +2,12 @@ pipeline {
     agent any
     environment {
           DOCKER_TAG = getDockerTag()
+          DOCKER_IMAGE = utube/testing
     }
     stages{
         stage('Build Docker Image') {
             steps { 
-                 sh 'docker build -t kammana/nodeapp:${DOCKER_TAG} -f build_image/Dockerfile . '
+                 sh 'docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} -f build_image/Dockerfile . '
             }
          }
     }
