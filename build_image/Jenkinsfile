@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
           DOCKER_TAG = getDockerTag()
-          DOCKER_IMAGE = utube/testing
+          DOCKER_IMAGE = 'utube/testing'
     }
     stages{
         stage('Build Docker Image') {
