@@ -2,14 +2,14 @@ pipeline {
     agent any
   
     stages{
-                     
+                 
 
          stage('Deploy to k8') {
             steps{
-                sshagent(['instance-1']) {
-                sh 'scp -o StrictHostKeyChecking=no notes.txt kdeploy@104.196.142.145:/home/kdeploy'
+                sshagent(['kdeploy']) {
+                 sh 'scp -o StrictHostKeyChecking=no notes.txt kdeploy@104.196.142.145:/home/kdeploy'
+                 }
                 
-                }
             }
         } 
     }
