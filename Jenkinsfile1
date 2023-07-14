@@ -9,10 +9,13 @@ pipeline {
                 sshagent(['instance-1']) {
                 sh 'scp -o StrictHostKeyChecking=no notes.txt kdeploy@104.196.142.145:/home/kdeploy'
                 
+                }
             }
-         }
-     } 
+        } 
+    }
+
 }
+
 
    
 
