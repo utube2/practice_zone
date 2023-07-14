@@ -22,8 +22,8 @@ pipeline {
 
          stage('Deploy to k8') {
             steps{
-                sh 'chmod  +x changeTag.sh'
-                sh './changeTag.sh ${DOCKER_TAG} '
+                sh 'chmod  +x deploy_k8/changeTag.sh'
+                sh './deploy_k8/changeTag.sh ${DOCKER_TAG} '
                 sshagent(['instance-1']) {
                 sh 'scp -o StrictHostKeyChecking=no change-pod.yml services.yml kdeploy@104.196.142.145:/home/kdeploy'
                 script{
