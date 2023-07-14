@@ -1,0 +1,50 @@
+pipeline {
+    agent any
+    environment {
+          DOCKER_TAG = getDockerTag()
+          DOCKER_IMAGE = 'utube/testing'
+    }
+    stages{
+        stage('Build Docker Image') {
+            steps { 
+                 sh 'docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} -f deploy_k8/Dockerfile . '
+            }
+         }
+        
+         stage('DockerHub Push') {
+            steps {
+               withCredentials([string(credentialsId: 'docker-hub',  variable: 'dockerhubpwd')]) {
+                 sh "docker login -u utube -p ${dockerhubpwd}"    
+                 sh "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}"
+               }
+         }
+
+         stage('Deploy to k8') {
+            steps{
+                sh 'chmod  +x changeTag.sh'
+                sh './changeTag.sh ${DOCKER_TAG} '
+                sshagent(['instance-1']) {
+                sh 'scp -o StrictHostKeyChecking=no change-pod.yml services.yml kdeploy@104.196.142.145:/home/kdeploy'
+                script{
+                      try {
+                          sh 'ssh kdeploy@104.196.142.145  kubectl apply -f .'
+                      }catch(error){
+                           sh 'ssh kdeploy@104.196.142.145  kubectl create -f .'
+                      }
+                }
+                }
+
+            }
+         }
+        } 
+    }
+}
+    
+
+   def getDockerTag(){
+        def tag = sh script: 'git rev-parse --short HEAD', returnStdout: true 
+        return tag
+    } 
+
+
+ 
