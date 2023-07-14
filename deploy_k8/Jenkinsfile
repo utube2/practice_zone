@@ -25,7 +25,7 @@ pipeline {
                 sh 'chmod  +x deploy_k8/changeTag.sh'
                 sh './deploy_k8/changeTag.sh ${DOCKER_TAG} '
                 sshagent(['instance-1']) {
-                sh 'scp -o StrictHostKeyChecking=no change-pod.yml services.yml kdeploy@104.196.142.145:/home/kdeploy'
+                sh 'scp -o StrictHostKeyChecking=no deploy_k8/change-pod.yml deploy_k8/services.yml kdeploy@104.196.142.145:/home/kdeploy'
                 script{
                       try {
                           sh 'ssh kdeploy@104.196.142.145  kubectl apply -f .'
