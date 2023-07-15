@@ -13,7 +13,7 @@ pipeline {
         
          stage('DockerHub Push') {
             steps{
-               withCredentials([string(credentialsId: 'docker-hub',  variable: 'dockerhubpwd')]) {
+               withCredentials([string(credentialsId: 'docker-hub', variable: 'dockerHubPwd')]) {
                  sh "docker login -u utube -p ${dockerhubpwd}"    
                  sh "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}"
                }
@@ -24,13 +24,13 @@ pipeline {
             steps{
                 sh 'chmod  +x deploy_k8/changeTag.sh'
                 sh './deploy_k8/changeTag.sh ${DOCKER_TAG} '
-                sshagent(['instance-1']) {
-                sh 'scp -o StrictHostKeyChecking=no deploy_k8/change-pod.yml deploy_k8/services.yml kdeploy@104.196.142.145:/home/kdeploy'
+                sshagent(['ssh-agent']) {
+                sh 'scp -o StrictHostKeyChecking=no deploy_k8/change-pod.yml deploy_k8/services.yml kdeploy@35.196.213.141:/home/kdeploy'
                 script{
                       try {
-                          sh 'ssh kdeploy@104.196.142.145  kubectl apply -f .'
+                          sh 'ssh kdeploy@35.196.213.141  kubectl apply -f .'
                       }catch(error){
-                           sh 'ssh kdeploy@104.196.142.145  kubectl create -f .'
+                           sh 'ssh kdeploy@35.196.213.141  kubectl create -f .'
                       }
                 }
                 }
