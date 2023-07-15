@@ -5,7 +5,7 @@ metadata:
   labels:
     app: nodeapp
 spec:
-containers:
+  containers:
     - name: nodeapp
       image: utube/testing:tagVersion
       ports:
