@@ -1,0 +1,19 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('git clone') {
+            steps {
+                  checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/utube2/practice_zone.git']])
+            }
+        }
+        
+        stage('Push to K8 server') {
+            steps {
+                 kubernetesDeploy configs: 'deploymentservice.yml', kubeconfigId: 'kubernetes'
+            }
+           
+        }
+    }
+}
+
