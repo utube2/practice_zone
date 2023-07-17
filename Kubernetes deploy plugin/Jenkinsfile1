@@ -1,0 +1,30 @@
+//Uninstall kubernetes continuous deploy plugin
+ // Go to jenkins server and sudo su jenkins 
+// pwd : /var/lib/jenkins
+// mkdir .kube && vi .kube/config , copy n paste the config file from kubernetes cluster  and :wq
+// Install kubectl , first su ubuntu in ubuntu host
+// Ubuntu : curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+// verify : echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check  ;; wait for ok
+//  sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+// sudo su jenkins and run kubectl get nodes
+//----------------------------------------------------------------------------------------------------------------------------------------
+
+pipeline {
+    agent any
+
+    stages {
+        stage('git clone') {
+            steps {
+                  checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/utube2/practice_zone.git']])
+            }
+        }
+        
+        stage('Push to K8 server') {
+            steps {
+                 /* sh  "kubectl apply -f ./'Kubernetes deploy plugin'/deploymentservice.yml" */ 
+                   sh  "kubectl delete -f ./'Kubernetes deploy plugin'/deploymentservice.yml"
+            }
+           
+        }
+    }
+}
