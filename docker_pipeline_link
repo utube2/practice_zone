@@ -1,0 +1,1 @@
+https://medium.com/@gustavo.guss/jenkins-building-docker-image-and-sending-to-registry-64b84ea45ee9#:~:text=In%20home%20of%20jenkins%2C%20click%20on%20%E2%80%9CNew%20Item%E2%80%9D%2C,stage%20%28%27Building%20image%27%29%20%7B%20docker.build%20registry%20%2B%20%22%3A%24BUILD_NUMBER%22
