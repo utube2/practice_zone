@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+    environment {
+     tag = 'utube/testing'
+     registry = 'dockerhub'
+     
+    }
+    stages {
+        stage('Hello') {
+            steps {
+                script {
+                    sh 'echo "========Pulling down code=========="'
+                    git branch: 'main', url: 'https://github.com/utube2/practice_zone.git'
+                }
+            }
+        }
+        
+     
+        
+        stage('build n push image') {
+            steps {
+                script {
+                    sh 'echo "========Login to Dockerhub=========="'
+                 // withDockerRegistry(credentialsId: 'dockerhub', url: '') {
+                        docker.withRegistry('', registry) {
+                            def myImage = docker.build tag + ":$BUILD_NUMBER"
+                            myImage.push()
+                        }           
+                }
+            }
+        }
+       
+        stage('Remove Unused docker image') {
+            steps{
+              sh "docker rmi $tag:$BUILD_NUMBER"
+            }
+        }
+
+
+    }
+    
+}
